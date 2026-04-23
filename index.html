@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사지 말고 입양하세요 - 유기견 보호 캠페인</title>
+    <style>
+        /* 기본 CSS 변수 설정 */
+        :root {
+            --primary-color: #FFB347;
+            --primary-dark: #E69A2E;
+            --secondary-color: #FFECE0; 
+            --bg-color: #FFFFFF; 
+            --text-color: #111111; 
+            --focus-color: #0056B3; 
+            --card-border: var(--primary-color);
+        }
+
+        /* 다크 모드 테마 */
+        body.dark-mode {
+            --primary-color: #4A90E2;
+            --primary-dark: #357ABD;
+            --secondary-color: #2C3E50;
+            --bg-color: #121212;
+            --text-color: #E0E0E0;
+            --card-border: #4A90E2;
+        }
+
+        /* 고대비 모드 테마 (시각장애/저시력자용: 검은 바탕에 노란 글씨) */
+        body.high-contrast {
+            --primary-color: #FFFF00;
+            --primary-dark: #CCCC00;
+            --secondary-color: #000000;
+            --bg-color: #000000;
+            --text-color: #FFFF00;
+            --card-border: #FFFF00;
+        }
+
+        body {
+            font-family: 'Pretendard', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            font-size: 1.2rem; /* 기본 폰트 크기 설정 */
+            word-break: keep-all;
+            transition: background-color 0.3s, color 0.3s, font-size 0.3s;
+        }
+
+        /* 접근성 툴바 (우측 고정) */
+        .a11y-toolbar {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .a11y-btn {
+            background-color: #333;
+            color: #FFF;
+            border: 3px solid #FFF;
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .a11y-btn:hover, .a11y-btn:focus {
+            transform: scale(1.1);
+            background-color: var(--primary-color);
+            color: #000;
+            outline: 4px solid var(--focus-color);
+        }
+
+        /* 고대비 모드일 때 추가 스타일 강제 적용 */
+        body.high-contrast * {
+            border-color: #FFFF00 !important;
+        }
+        body.high-contrast .a11y-btn {
+            background-color: #000;
+            color: #FFFF00;
+            border: 3px solid #FFFF00;
+        }
+
+        /* 본문 바로가기 */
+        .skip-link {
+            position: absolute;
+            top: -40px; left: 0; background: #000; color: white; padding: 8px; z-index: 100;
+        }
+        .skip-link:focus { top: 0; }
+
+        header {
+            background-color: var(--primary-color);
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #111; /* 다크/고대비 모드에서도 헤더 글씨는 검정 계열 유지 */
+            border-bottom: 5px solid var(--primary-dark);
+        }
+        
+        body.high-contrast header { color: #000; }
+
+        h1 { font-size: 2.2em; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.8em; margin-bottom: 1rem; }
+
+        main { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+
+        .info-section { display: flex; flex-direction: column; gap: 2rem; margin-bottom: 3rem; }
+
+        .card {
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 2px solid var(--card-border);
+            text-align: center;
+        }
+
+        .slider-container { position: relative; margin-bottom: 1.5rem; }
+
+        #campaign-slider {
+            width: 100%; height: 300px; object-fit: cover; border-radius: 10px;
+            transition: opacity 0.8s ease-in-out; border: 1px solid #CCC;
+        }
+
+        .small-btn {
+            background-color: #EEE; color: #333; border: 2px solid #CCC; padding: 0.5rem 1rem;
+            font-size: 1rem; border-radius: 8px; cursor: pointer; font-weight: bold;
+        }
+
+        .interactive-section {
+            background-color: var(--secondary-color);
+            border-radius: 15px; padding: 2.5rem 1rem; text-align: center; margin-bottom: 3rem;
+            border: 2px solid var(--card-border);
+        }
+
+        button.action-btn, .link-btn {
+            background-color: var(--primary-color); color: #111; border: 2px solid var(--primary-dark);
+            padding: 1.2em 2.5em; font-size: 1.2em; font-weight: bold; border-radius: 50px; cursor: pointer;
+            margin: 1.5rem 0; display: inline-block; text-decoration: none;
+        }
+
+        body.high-contrast button.action-btn, body.high-contrast .link-btn { color: #000; }
+
+        button:focus, a:focus { outline: 5px solid var(--focus-color); outline-offset: 4px; }
+
+        .pledge-counter {
+            font-size: 1.8em; font-weight: bold; background-color: var(--bg-color); display: inline-block;
+            padding: 1rem 2rem; border-radius: 15px; border: 3px solid var(--primary-dark);
+        }
+
+        #pledge-message { font-size: 1.2em; font-weight: bold; margin-top: 1rem; min-height: 2rem; color: var(--text-color); }
+
+        .quiz-container {
+            margin-top: 2rem; background-color: var(--bg-color); padding: 2rem 1.5rem;
+            border-radius: 15px; border: 2px solid var(--card-border);
+        }
+
+        .quiz-btn {
+            background-color: var(--bg-color); color: var(--text-color); border: 4px solid var(--primary-color);
+            margin: 1rem 0.5rem; width: 120px; font-size: 1.5em; border-radius: 10px; cursor: pointer; padding: 10px;
+        }
+
+        #quiz-result { margin-top: 1.5rem; font-weight: bold; font-size: 1.2em; min-height: 3rem; padding: 1rem; border-radius: 10px; }
+
+        footer { text-align: center; padding: 2rem; background-color: var(--secondary-color); font-size: 0.9em; border-top: 1px solid var(--card-border); }
+    </style>
+</head>
+<body>
+
+    <div class="a11y-toolbar" aria-label="접근성 도구 모음">
+        <button class="a11y-btn" onclick="toggleFontSize()" aria-label="글자 크기 키우기" title="글자 크기 조절">Aa</button>
+        <button class="a11y-btn" onclick="toggleHighContrast()" aria-label="고대비 색상 전환" title="고대비 모드">◐</button>
+        <button class="a11y-btn" onclick="toggleDarkMode()" aria-label="다크 모드 전환" title="다크 모드">🌙</button>
+        <button class="a11y-btn" onclick="startSTT()" aria-label="음성 명령 시작" title="음성 명령(마이크)">🎤</button>
+    </div>
+
+    <a href="#main-content" class="skip-link">본문 바로가기</a>
+
+    <header>
+        <h1>🐾 우리의 친구가 되어주세요 🐾</h1>
+        <p>가족의 손길을 기다리는 아이들에게<br>따뜻한 희망과 사랑을 선물해 주세요.</p>
+    </header>
+
+    <main id="main-content">
+        <section class="info-section">
+            <div class="card">
+                <div class="slider-container">
+                    <img id="campaign-slider" src="picture/dog1.jpg" alt="가족을 기다리는 다양한 유기견들의 사진입니다.">
+                </div>
+                <div class="slider-controls">
+                    <button id="pause-btn" class="small-btn" onclick="toggleSlider()" aria-label="사진 슬라이드 일시정지">⏸️ 사진 멈춤</button>
+                </div>
+                <h3>가족을 기다리는 작은 생명들</h3>
+                <p>매년 수많은 강아지들이 길을 잃거나 버려집니다. 낯선 환경에서 두려움에 떠는 이 아이들에게는 다시 믿고 의지할 가족이 꼭 필요합니다.</p>
+            </div>
+
+            <div class="card">
+                <h3>사지 말고 입양하세요</h3>
+                <p>입양은 단순한 선택이 아닙니다. 한 생명의 온 세상을 빛나게 바꿔주는 아름다운 행동입니다.</p>
+                <a href="https://www.animal.go.kr/" target="_blank" rel="noopener noreferrer" class="link-btn">🏠 입양 정보 알아보기</a>
+            </div>
+        </section>
+
+        <section class="interactive-section">
+            <h2>함께 만드는 희망 🌟</h2>
+            <p>마이크를 누르고 <strong>"서약"</strong>이라고 말하거나 아래 버튼을 눌러주세요!</p>
+            <button class="action-btn" id="pledge-btn" onclick="addPledge()">🖐️ 유기견 보호 서약하기</button>
+            <div id="pledge-message" aria-live="polite"></div>
+            <p style="margin-top: 2rem;">지금까지 함께해 주신 따뜻한 분들</p>
+            <div class="pledge-counter" aria-live="polite"><span id="count-display">342</span>명 동참 중!</div>
+        </section>
+
+        <section class="interactive-section">
+            <h2>함께 풀어보는 O/X 퀴즈 🧐</h2>
+            <div class="quiz-container">
+                <p><strong>문제: 길을 잃은 강아지를 발견하면 무조건 집으로 먼저 데려와야 한다?</strong></p>
+                <p style="font-size: 0.9em;">(마이크를 켜고 <strong>"오"</strong> 또는 <strong>"엑스"</strong>라고 말해보세요!)</p>
+                <button class="quiz-btn" id="quiz-o" onclick="checkQuiz('O')" aria-label="그렇다(O) 선택">O</button>
+                <button class="quiz-btn" id="quiz-x" onclick="checkQuiz('X')" aria-label="아니다(X) 선택">X</button>
+                <div id="quiz-result" aria-live="polite"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 유기견 보호 캠페인. 작은 관심이 모여 큰 기적을 만듭니다.</p>
+    </footer>
+
+    <script>
+        // --- 1. 접근성 툴바 기능 ---
+        
+        // 글자 크기 3단계 조절
+        let fontLevel = 1;
+        function toggleFontSize() {
+            fontLevel = fontLevel >= 3 ? 1 : fontLevel + 1;
+            if (fontLevel === 1) document.body.style.fontSize = "1.2rem";
+            if (fontLevel === 2) document.body.style.fontSize = "1.5rem"; // 조금 큼
+            if (fontLevel === 3) document.body.style.fontSize = "1.8rem"; // 아주 큼
+        }
+
+        // 고대비 모드 전환
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+            document.body.classList.remove('dark-mode'); // 다크모드 해제
+        }
+
+        // 다크 모드 전환
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.body.classList.remove('high-contrast'); // 고대비모드 해제
+        }
+
+        // --- 2. STT (음성 명령) 기능 ---
+        function startSTT() {
+            // 브라우저 지원 여부 확인 (Chrome, Edge 등에서 지원)
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                alert("현재 사용 중인 브라우저에서는 음성 인식 기능을 지원하지 않습니다. 구글 크롬(Chrome)을 이용해 주세요.");
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'ko-KR'; // 한국어 설정
+            recognition.interimResults = false;
+            
+            alert("마이크가 켜졌습니다. '서약', '오', '엑스' 중 하나를 말씀해 주세요!");
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript.trim().replace(/\s/g, ""); // 공백 제거
+                
+                if (transcript.includes("서약")) {
+                    document.getElementById("pledge-btn").click();
+                } else if (transcript.includes("오") || transcript.includes("O")) {
+                    document.getElementById("quiz-o").click();
+                } else if (transcript.includes("엑스") || transcript.includes("X")) {
+                    document.getElementById("quiz-x").click();
+                } else {
+                    alert(`"${transcript}"(이)라고 인식되었습니다. '서약', '오', '엑스'라고 다시 말씀해 보세요.`);
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error("음성 인식 에러: ", event.error);
+                if (event.error === 'not-allowed') {
+                    alert("마이크 사용 권한이 거부되었습니다. 브라우저 주소창 왼쪽의 자물쇠 아이콘을 눌러 마이크 권한을 허용해 주세요.");
+                }
+            };
+        }
+
+
+        // --- 3. 기존 인터랙티브 기능들 ---
+        let currentPledges = 342; 
+        function addPledge() {
+            currentPledges++; 
+            document.getElementById('count-display').innerText = currentPledges; 
+            const msgBox = document.getElementById('pledge-message');
+            msgBox.style.color = "var(--text-color)";
+            msgBox.innerText = "서약에 동참해 주셔서 정말 감사합니다! 🐶💛";
+        }
+
+        function checkQuiz(userAnswer) {
+            const resultBox = document.getElementById('quiz-result');
+            
+            // 고대비 모드에서는 배경색 대신 테두리와 텍스트로만 구분
+            if (userAnswer === 'X') {
+                resultBox.style.border = "3px solid #27AE60";
+                resultBox.innerText = "정답입니다! 🎉\n관할 구청이나 동물보호센터에 먼저 신고하여 안전하게 보호받을 수 있도록 돕는 것이 올바른 방법입니다.";
+            } else {
+                resultBox.style.border = "3px solid #C0392B";
+                resultBox.innerText = "아쉽네요! 다시 생각해 볼까요? 🤔\n개인이 무작정 집으로 데려가기보다, 주인을 찾을 수 있도록 기관에 먼저 신고해야 합니다.";
+            }
+        }
+
+        // --- 4. 슬라이드 제어 ---
+        const images = ['picture/dog1.jpg', 'picture/dog2.jpg', 'picture/dog3.jpg'];
+        let currentIndex = 0;
+        const sliderElement = document.getElementById('campaign-slider');
+        let sliderInterval;
+        let isPlaying = true;
+
+        function changeSlide() {
+            sliderElement.style.opacity = 0;
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % images.length;
+                sliderElement.src = images[currentIndex];          
+                sliderElement.style.opacity = 1;                   
+            }, 800); 
+        }
+
+        sliderInterval = setInterval(changeSlide, 3500);
+
+        function toggleSlider() {
+            const btn = document.getElementById('pause-btn');
+            if (isPlaying) {
+                clearInterval(sliderInterval);
+                btn.innerText = "▶️ 사진 재생";
+                btn.setAttribute("aria-label", "사진 슬라이드 재생하기");
+                isPlaying = false;
+            } else {
+                changeSlide(); 
+                sliderInterval = setInterval(changeSlide, 3500); 
+                btn.innerText = "⏸️ 사진 멈춤";
+                btn.setAttribute("aria-label", "사진 슬라이드 일시정지하기");
+                isPlaying = true;
+            }
+        }
+    </script>
+</body>
+</html>
